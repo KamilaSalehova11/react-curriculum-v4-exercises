@@ -1,0 +1,7 @@
+function SnackApp() {
+    return (
+      <div>
+        <h1>Snack Rankings</h1>;
+      </div>
+    );
+}
