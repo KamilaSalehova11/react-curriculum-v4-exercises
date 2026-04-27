@@ -10,11 +10,10 @@
 
 import { useState } from 'react';
 export default function BugMutatedState() {
-  let [count, setCount] = useState(0);
+  const [count, setCount] = useState(0);
 
   function handleAdd() {
-    count++;
-    setCount(count);
+    setCount(count + 1);
   }
 
   return (
@@ -24,6 +23,6 @@ export default function BugMutatedState() {
     </div>
   );
 }
-
 // Explanation:
-// (Write your explanation here)
+// for useState() we should ever use const variable
+// count++ was not understanded so I put count+1

@@ -1,5 +1,5 @@
 // src/exercises/lesson-03/BugProps.jsx
-
+import { useState } from 'react';
 /*
   BUG #3 — Props Not Updating
 
@@ -12,11 +12,13 @@
   Use the commented "Explanation" section at the bottom of this lesson's components.
 */
 
+// src/exercises/lesson-03/BugProps.jsx
+
 export default function BugProps({ name = 'friend' }) {
-  let message = 'Hello, ' + name;
+  const [message, setMessage] = useState('Hello, ' + name);
 
   function handleChange() {
-    message = 'Hi, ' + name + '!';
+    setMessage('Hi, ' + name + '!');
   }
 
   return (
@@ -29,3 +31,6 @@ export default function BugProps({ name = 'friend' }) {
 
 // Explanation:
 // (Write your explanation here)
+// A regular variable like let message = ... gets recreated each render, and changing it by itself does not trigger a React update.
+
+/* Using useState gives React a tracked value plus a setter function, and calling the setter tells React to render the component again with the new message. */
