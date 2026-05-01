@@ -20,9 +20,10 @@ export default function BugStrictMode() {
     </div>
   );
 }
-//createRoot(document.getElementById('root')).render(
-// <BugStrictMode />
-//);
 
 // Write your explanation of how StrictMode helps us catch this bug
 //  return () => clearInterval(timer) help to clear up timer before every counting;
+/*
+setInterval() kept creating new timers without removing the old ones.
+By returning () => clearInterval(timer) from useEffect, I clean up the previous interval whenever the effect is cleaned up, so only one timer runs and the counter increments correctly by 1 each second.
+*/
