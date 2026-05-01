@@ -2,9 +2,9 @@ import { useState } from 'react';
 
 // TOPIC: Choose the correct tool: useRef vs useState
 // TASK: Make sure it updates the text *without* triggering a re-render
+
 export default function FindCorrectHook() {
   const [count, setCount] = useState(0);
-  //let clickCount = 0; // ← incorrect implementation
 
   function handleClick() {
     setCount(count + 1);
