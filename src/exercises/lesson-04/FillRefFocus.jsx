@@ -13,7 +13,7 @@ export default function FillRefFocus() {
     <div>
       <h2>useRef: Focusing an Input</h2>
 
-      <input type="text" placeholder="Type here..." />
+      <input ref={inputRef} type="text" placeholder="Type here..." />
 
       <button onClick={focusInput}>Focus Input</button>
     </div>
