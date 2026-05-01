@@ -7,9 +7,10 @@ export default function BugStrictMode() {
   const [count, setCount] = useState(0);
 
   useEffect(() => {
-    setInterval(() => {
+    const timer = setInterval(() => {
       setCount((c) => c + 1);
     }, 1000);
+    return () => clearInterval(timer);
   }, []);
 
   return (
@@ -19,5 +20,9 @@ export default function BugStrictMode() {
     </div>
   );
 }
+//createRoot(document.getElementById('root')).render(
+// <BugStrictMode />
+//);
 
 // Write your explanation of how StrictMode helps us catch this bug
+//  return () => clearInterval(timer) help to clear up timer before every counting;
