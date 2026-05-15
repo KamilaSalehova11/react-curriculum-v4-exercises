@@ -2,7 +2,6 @@ import BugStrictMode from './BugStrictMode';
 import FindCorrectHook from './FindCorrectHook';
 import BugEventPropagation from './BugEventPropagation';
 import FillRefFocus from './FillRefFocus';
-import BugChildParentCommunication from './BugChildParentCommunication';
 
 export default function StudentWork() {
   return (
@@ -14,8 +13,6 @@ export default function StudentWork() {
       <BugEventPropagation />
       <hr />
       <FillRefFocus />
-      <hr />
-      <BugChildParentCommunication />
     </div>
   );
 }
