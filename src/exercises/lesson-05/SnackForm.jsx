@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import styles from './SnackForm.module.css';
 
 export default function SnackForm({
@@ -7,19 +8,63 @@ export default function SnackForm({
   updateSnack,
   className,
 }) {
-  const isEditing = Boolean(editingSnack);
+  const [name, setName] = useState('');
+  const [rating, setRating] = useState('');
+  const [touched, setTouched] = useState({
+    name: false,
+    rating: false,
+  });
+
+  useEffect(() => {
+    if (editingSnack) {
+      setName(editingSnack.name);
+      setRating(String(editingSnack.rating));
+    } else {
+      setName('');
+      setRating('');
+    }
+
+    setTouched({ name: false, rating: false });
+  }, [editingSnack]);
+
+  function validateName() {
+    return name.trim() !== '';
+  }
+
+  function validateRating() {
+    const numericRating = Number(rating);
+    return rating !== '' && numericRating >= 1 && numericRating <= 5;
+  }
+
+  function getNameError() {
+    if (!touched.name || validateName()) return '';
+    return 'Snack name is required';
+  }
+
+  function getRatingError() {
+    if (!touched.rating || validateRating()) return '';
+    return 'Please enter a rating from 1 to 5';
+  }
 
   function handleSubmit(e) {
     e.preventDefault();
-    const formData = new FormData(e.target);
-    const name = formData.get('name');
-    const rating = formData.get('rating');
 
-    if (isEditing) {
-      updateSnack(editingSnack.id, name, rating);
+    const isNameValid = validateName();
+    const isRatingValid = validateRating();
+
+    if (!isNameValid || !isRatingValid) {
+      setTouched({ name: true, rating: true });
+      return;
+    }
+
+    const trimmedName = name.trim();
+    if (editingSnack) {
+      updateSnack(editingSnack.id, trimmedName, rating);
     } else {
-      addSnack(name, rating);
-      e.target.reset();
+      addSnack(trimmedName, rating);
+      setName('');
+      setRating('');
+      setTouched({ name: false, rating: false });
     }
   }
 
@@ -29,33 +74,43 @@ export default function SnackForm({
       className={`${styles.form} ${className || ''}`}
     >
       <h3 className={styles['form-title']}>
-        {isEditing ? '✏️ Edit Snack' : '➕ Add Snack'}
+        {editingSnack ? 'Edit Snack' : 'Add a New Snack'}
       </h3>
 
       <div className={styles['field-container']}>
-        <label className={styles['field-label']}>Name:</label>
+        <label htmlFor="name" className={styles['field-label']}>
+          Snack Name
+        </label>
         <input
-          type="text"
+          id="name"
           name="name"
-          defaultValue={isEditing ? editingSnack.name : ''}
-          required
-          className={styles['field-input']}
-          placeholder="Enter snack name"
+          type="text"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          onFocus={() => setTouched((prev) => ({ ...prev, name: true }))}
+          className={`${styles['field-input']} ${getNameError() ? styles['input-error'] : ''}`}
         />
+        {getNameError() && <div className={styles.error}>{getNameError()}</div>}
       </div>
 
       <div className={styles['field-container']}>
-        <label className={styles['field-label']}>Rating:</label>
+        <label htmlFor="rating" className={styles['field-label']}>
+          Rating (1-5)
+        </label>
         <input
-          type="number"
+          id="rating"
           name="rating"
-          defaultValue={isEditing ? editingSnack.rating : ''}
-          required
+          type="number"
           min="1"
           max="5"
-          className={styles['field-input']}
-          placeholder="Rate 1-5"
+          value={rating}
+          onChange={(e) => setRating(e.target.value)}
+          onFocus={() => setTouched((prev) => ({ ...prev, rating: true }))}
+          className={`${styles['field-input']} ${getRatingError() ? styles['input-error'] : ''}`}
         />
+        {getRatingError() && (
+          <div className={styles.error}>{getRatingError()}</div>
+        )}
       </div>
 
       <div className={styles['button-container']}>
@@ -63,10 +118,10 @@ export default function SnackForm({
           type="submit"
           className={`${styles.button} ${styles['submit-button']}`}
         >
-          {isEditing ? 'Save' : 'Add'}
+          {editingSnack ? 'Update Snack' : 'Add Snack'}
         </button>
 
-        {isEditing && (
+        {editingSnack && (
           <button
             type="button"
             onClick={cancelEdit}
